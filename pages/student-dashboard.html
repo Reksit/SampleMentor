@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Growth Monitoring</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🎓 Student Portal</h2>
+                <p id="studentName">Loading...</p>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="#" class="active" onclick="showSection('overview')"><span>📊</span> Overview</a></li>
+                <li><a href="#" onclick="showSection('criteria')"><span>📝</span> 12 Criteria</a></li>
+                <li><a href="#" onclick="showSection('submit')"><span>➕</span> Submit Update</a></li>
+                <li><a href="#" onclick="showSection('history')"><span>📜</span> Submission History</a></li>
+                <li><a href="#" onclick="showSection('profile')"><span>👤</span> My Profile</a></li>
+                <li><a href="#" onclick="logout()"><span>🚪</span> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1>Student Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar">RK</div>
+                    <div>
+                        <strong id="topbarName">Rajesh Kumar</strong>
+                        <p style="margin:0; font-size: 0.875rem; color: var(--text-secondary);">Roll: 21CS101</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div id="overview-section">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Total Marks</h3>
+                            <div class="stat-value" id="totalMarks">39</div>
+                        </div>
+                        <div class="stat-icon primary">📊</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Progress</h3>
+                            <div class="stat-value" id="progressPercent">63%</div>
+                        </div>
+                        <div class="stat-icon success">📈</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Pending Reviews</h3>
+                            <div class="stat-value" id="pendingCount">1</div>
+                        </div>
+                        <div class="stat-icon warning">⏳</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Approved Submissions</h3>
+                            <div class="stat-value" id="approvedCount">1</div>
+                        </div>
+                        <div class="stat-icon info">✅</div>
+                    </div>
+                </div>
+
+                <!-- Overall Progress -->
+                <div class="content-card">
+                    <h2>Overall Progress</h2>
+                    <div class="progress">
+                        <div class="progress-bar" id="overallProgressBar" style="width: 63%"></div>
+                    </div>
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">39 / 62 marks achieved</p>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="content-card">
+                    <h2>Recent Submissions</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Week</th>
+                                    <th>Criterion</th>
+                                    <th>Activity</th>
+                                    <th>Status</th>
+                                    <th>Marks</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentActivity">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 12 Criteria Section -->
+            <div id="criteria-section" style="display: none;">
+                <div class="content-card">
+                    <h2>Your Progress Across 12 Growth Criteria</h2>
+                    <div class="criteria-grid" id="criteriaGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Update Section -->
+            <div id="submit-section" style="display: none;">
+                <div class="content-card">
+                    <h2>Submit Weekly Update</h2>
+                    <form id="submitForm">
+                        <div class="form-group">
+                            <label for="weekNumber">Week Number</label>
+                            <input type="number" id="weekNumber" min="1" max="52" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="criterion">Select Criterion</label>
+                            <select id="criterion" required>
+                                <option value="">Choose a criterion</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="activity">Activity Title</label>
+                            <input type="text" id="activity" placeholder="e.g., Solved 50 LeetCode problems" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" rows="4" placeholder="Detailed description of your activity..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="proofFile">Upload Proof (PDF, Image, Link)</label>
+                            <input type="file" id="proofFile" accept=".pdf,.jpg,.jpeg,.png">
+                            <p style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-secondary);">
+                                Or enter URL below
+                            </p>
+                            <input type="url" id="proofUrl" placeholder="https://example.com/proof">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit for Review</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Submission History Section -->
+            <div id="history-section" style="display: none;">
+                <div class="content-card">
+                    <h2>Submission History</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Week</th>
+                                    <th>Criterion</th>
+                                    <th>Activity</th>
+                                    <th>Status</th>
+                                    <th>Marks</th>
+                                    <th>Reviewer Comment</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTable">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div id="profile-section" style="display: none;">
+                <div class="content-card">
+                    <h2>My Profile</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <p><strong>Name:</strong> <span id="profileName">Rajesh Kumar</span></p>
+                            <p><strong>Roll Number:</strong> <span id="profileRoll">21CS101</span></p>
+                            <p><strong>Register Number:</strong> <span id="profileRegister">REG2021CS001</span></p>
+                            <p><strong>Department:</strong> <span id="profileDept">Computer Science</span></p>
+                        </div>
+                        <div>
+                            <p><strong>Year:</strong> <span id="profileYear">3</span></p>
+                            <p><strong>Class:</strong> <span id="profileClass">CSE-A</span></p>
+                            <p><strong>Section:</strong> <span id="profileSection">A</span></p>
+                            <p><strong>Mentor:</strong> <span id="profileMentor">Dr. Suresh Kumar</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/mock-data.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script>
+        // Check authentication
+        if (!checkAuth()) {
+            window.location.href = '../index.html';
+        }
+
+        // Current student (mock data - student id 1)
+        const currentStudent = getStudentById(1);
+        const studentProgress = getStudentProgress(1);
+        const studentUpdates = getStudentUpdates(1);
+
+        // Initialize page
+        function initPage() {
+            // Update student name
+            document.getElementById('studentName').textContent = currentStudent.name;
+            document.getElementById('topbarName').textContent = currentStudent.name;
+
+            // Calculate and display stats
+            const totalMarks = getTotalMarks(1);
+            const maxMarks = getMaxPossibleMarks();
+            const progress = getProgressPercentage(1);
+            const pendingCount = studentUpdates.filter(u => u.status === 'PENDING_REVIEW').length;
+            const approvedCount = studentUpdates.filter(u => u.status === 'APPROVED').length;
+
+            document.getElementById('totalMarks').textContent = totalMarks;
+            document.getElementById('progressPercent').textContent = progress + '%';
+            document.getElementById('pendingCount').textContent = pendingCount;
+            document.getElementById('approvedCount').textContent = approvedCount;
+            document.getElementById('overallProgressBar').style.width = progress + '%';
+
+            // Populate recent activity
+            populateRecentActivity();
+
+            // Populate criteria grid
+            populateCriteriaGrid();
+
+            // Populate criterion dropdown
+            populateCriterionDropdown();
+
+            // Populate submission history
+            populateHistory();
+
+            // Populate profile
+            populateProfile();
+        }
+
+        function populateRecentActivity() {
+            const tbody = document.getElementById('recentActivity');
+            tbody.innerHTML = '';
+
+            studentUpdates.slice(0, 5).forEach(update => {
+                const criterion = mockData.criteria.find(c => c.id === update.criterionId);
+                const row = `
+                    <tr>
+                        <td>${update.weekNumber}</td>
+                        <td>${criterion.name}</td>
+                        <td>${update.activity}</td>
+                        <td>${getStatusBadge(update.status)}</td>
+                        <td>${update.marks !== null ? update.marks : '-'}</td>
+                        <td>${formatDate(update.submittedDate)}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function populateCriteriaGrid() {
+            const grid = document.getElementById('criteriaGrid');
+            grid.innerHTML = '';
+
+            mockData.criteria.forEach(criterion => {
+                const progress = studentProgress.find(p => p.criterionId === criterion.id);
+                const currentMarks = progress ? progress.currentMarks : 0;
+                const percentage = (currentMarks / criterion.maxMarks) * 100;
+
+                const card = `
+                    <div class="criteria-card">
+                        <h3>${criterion.name}</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0.5rem 0;">
+                            ${criterion.category}
+                        </p>
+                        <div class="progress">
+                            <div class="progress-bar ${getProgressColor(percentage)}" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="marks">
+                            <span class="current-marks">${currentMarks}</span>
+                            <span class="max-marks">/ ${criterion.maxMarks} marks</span>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        function populateCriterionDropdown() {
+            const select = document.getElementById('criterion');
+            mockData.criteria.forEach(criterion => {
+                const option = document.createElement('option');
+                option.value = criterion.id;
+                option.textContent = criterion.name;
+                select.appendChild(option);
+            });
+        }
+
+        function populateHistory() {
+            const tbody = document.getElementById('historyTable');
+            tbody.innerHTML = '';
+
+            studentUpdates.forEach(update => {
+                const criterion = mockData.criteria.find(c => c.id === update.criterionId);
+                const row = `
+                    <tr>
+                        <td>${update.weekNumber}</td>
+                        <td>${criterion.name}</td>
+                        <td>${update.activity}</td>
+                        <td>${getStatusBadge(update.status)}</td>
+                        <td>${update.marks !== null ? update.marks : '-'}</td>
+                        <td>${update.reviewerComment || '-'}</td>
+                        <td>${formatDate(update.submittedDate)}</td>
+                        <td>
+                            ${update.status === 'REJECTED' ? '<button class="btn btn-sm btn-primary" onclick="resubmit(' + update.id + ')">Resubmit</button>' : '-'}
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function populateProfile() {
+            document.getElementById('profileName').textContent = currentStudent.name;
+            document.getElementById('profileRoll').textContent = currentStudent.rollNumber;
+            document.getElementById('profileRegister').textContent = currentStudent.registerNumber;
+            document.getElementById('profileDept').textContent = currentStudent.department;
+            document.getElementById('profileYear').textContent = currentStudent.year;
+            document.getElementById('profileClass').textContent = currentStudent.class;
+            document.getElementById('profileSection').textContent = currentStudent.section;
+
+            const mentor = mockData.mentors.find(m => m.id === currentStudent.mentorId);
+            document.getElementById('profileMentor').textContent = mentor.name;
+        }
+
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('[id$="-section"]').forEach(sec => {
+                sec.style.display = 'none';
+            });
+
+            // Show selected section
+            document.getElementById(section + '-section').style.display = 'block';
+
+            // Update active nav
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Handle form submission
+        document.getElementById('submitForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = {
+                weekNumber: document.getElementById('weekNumber').value,
+                criterion: document.getElementById('criterion').value,
+                activity: document.getElementById('activity').value,
+                description: document.getElementById('description').value,
+                proof: document.getElementById('proofUrl').value || 'file-uploaded.pdf'
+            };
+
+            showAlert('Weekly update submitted successfully! Waiting for mentor review.', 'success');
+            this.reset();
+            showSection('overview');
+        });
+
+        function resubmit(updateId) {
+            showAlert('Please update your submission and resubmit.', 'info');
+            showSection('submit');
+        }
+
+        // Initialize on page load
+        initPage();
+    </script>
+</body>
+</html>

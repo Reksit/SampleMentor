@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Dashboard - Growth Monitoring</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>👨‍🏫 Mentor Portal</h2>
+                <p>Dr. Suresh Kumar</p>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="#" class="active" onclick="showSection('overview')"><span>📊</span> Overview</a></li>
+                <li><a href="#" onclick="showSection('students')"><span>👥</span> My Students</a></li>
+                <li><a href="#" onclick="showSection('reviews')"><span>✅</span> Pending Reviews</a></li>
+                <li><a href="#" onclick="showSection('analytics')"><span>📈</span> Analytics</a></li>
+                <li><a href="#" onclick="logout()"><span>🚪</span> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1>Mentor Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar">SK</div>
+                    <div>
+                        <strong>Dr. Suresh Kumar</strong>
+                        <p style="margin:0; font-size: 0.875rem; color: var(--text-secondary);">Mentor - CSE Dept</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div id="overview-section">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Total Students</h3>
+                            <div class="stat-value">2</div>
+                        </div>
+                        <div class="stat-icon primary">👥</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Pending Reviews</h3>
+                            <div class="stat-value" id="pendingReviews">1</div>
+                        </div>
+                        <div class="stat-icon warning">⏳</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Avg. Progress</h3>
+                            <div class="stat-value">68%</div>
+                        </div>
+                        <div class="stat-icon success">📈</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Total Reviews</h3>
+                            <div class="stat-value">2</div>
+                        </div>
+                        <div class="stat-icon info">✅</div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="content-card">
+                    <h2>Quick Actions</h2>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="showSection('reviews')">Review Submissions</button>
+                        <button class="btn btn-secondary" onclick="showSection('students')">View All Students</button>
+                        <button class="btn btn-success" onclick="exportData()">Export Report</button>
+                    </div>
+                </div>
+
+                <!-- Recent Submissions -->
+                <div class="content-card">
+                    <h2>Recent Student Submissions</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Week</th>
+                                    <th>Criterion</th>
+                                    <th>Activity</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentSubmissions">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Students Section -->
+            <div id="students-section" style="display: none;">
+                <div class="content-card">
+                    <h2>
+                        My Students
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <input type="text" id="studentSearch" placeholder="Search students..." style="padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 8px;">
+                        </div>
+                    </h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Roll No</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Year</th>
+                                    <th>Section</th>
+                                    <th>Total Marks</th>
+                                    <th>Progress</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTable">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Reviews Section -->
+            <div id="reviews-section" style="display: none;">
+                <div class="content-card">
+                    <h2>Pending Reviews <span class="badge badge-warning" id="reviewCount">1</span></h2>
+                    <div id="pendingReviewsList">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics-section" style="display: none;">
+                <div class="content-card">
+                    <h2>Student Performance Analytics</h2>
+
+                    <!-- Student-wise Progress -->
+                    <h3 style="margin-top: 2rem;">Student-wise Progress</h3>
+                    <div id="studentProgressCharts">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <!-- Criteria-wise Analytics -->
+                    <h3 style="margin-top: 2rem;">Criteria-wise Average Performance</h3>
+                    <div class="criteria-grid" id="criteriaAnalytics">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Review Submission</h2>
+                <button class="modal-close" onclick="hideModal('reviewModal')">&times;</button>
+            </div>
+            <div id="reviewDetails">
+                <!-- Populated by JS -->
+            </div>
+            <form id="reviewForm">
+                <div class="form-group">
+                    <label for="reviewMarks">Marks</label>
+                    <input type="number" id="reviewMarks" min="0" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="reviewComment">Comment</label>
+                    <textarea id="reviewComment" rows="3" placeholder="Add your feedback..." required></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="button" class="btn btn-success" onclick="approveSubmission()">Approve</button>
+                    <button type="button" class="btn btn-danger" onclick="rejectSubmission()">Reject</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideModal('reviewModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Student Detail Modal -->
+    <div id="studentDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Student Details</h2>
+                <button class="modal-close" onclick="hideModal('studentDetailModal')">&times;</button>
+            </div>
+            <div id="studentDetailContent">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/mock-data.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script>
+        // Check authentication
+        if (!checkAuth()) {
+            window.location.href = '../index.html';
+        }
+
+        // Current mentor (mock data - mentor id 1)
+        const currentMentorId = 1;
+        const myStudents = getMentorStudents(currentMentorId);
+        let currentReviewUpdate = null;
+
+        // Initialize page
+        function initPage() {
+            populateRecentSubmissions();
+            populateStudentsTable();
+            populatePendingReviews();
+            populateAnalytics();
+
+            // Setup search
+            document.getElementById('studentSearch').addEventListener('input', (e) => {
+                filterTable(e.target.value);
+            });
+        }
+
+        function populateRecentSubmissions() {
+            const tbody = document.getElementById('recentSubmissions');
+            tbody.innerHTML = '';
+
+            // Get all submissions from my students
+            const submissions = mockData.weeklyUpdates.filter(u =>
+                myStudents.some(s => s.id === u.studentId)
+            );
+
+            submissions.forEach(update => {
+                const student = getStudentById(update.studentId);
+                const criterion = mockData.criteria.find(c => c.id === update.criterionId);
+
+                const row = `
+                    <tr>
+                        <td>${student.name}<br><small>${student.rollNumber}</small></td>
+                        <td>${update.weekNumber}</td>
+                        <td>${criterion.name}</td>
+                        <td>${update.activity}</td>
+                        <td>${getStatusBadge(update.status)}</td>
+                        <td>${formatDate(update.submittedDate)}</td>
+                        <td>
+                            ${update.status === 'PENDING_REVIEW' ?
+                                '<button class="btn btn-sm btn-primary" onclick="openReviewModal(' + update.id + ')">Review</button>' :
+                                '<button class="btn btn-sm btn-secondary" onclick="viewDetails(' + update.id + ')">View</button>'
+                            }
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function populateStudentsTable() {
+            const tbody = document.getElementById('studentsTable');
+            tbody.innerHTML = '';
+
+            myStudents.forEach(student => {
+                const totalMarks = getTotalMarks(student.id);
+                const progress = getProgressPercentage(student.id);
+
+                const row = `
+                    <tr>
+                        <td>${student.rollNumber}</td>
+                        <td>${student.name}</td>
+                        <td>${student.department}</td>
+                        <td>${student.year}</td>
+                        <td>${student.section}</td>
+                        <td>${totalMarks}</td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar ${getProgressColor(progress)}" style="width: ${progress}%"></div>
+                            </div>
+                            <small>${progress}%</small>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="viewStudentDetails(${student.id})">View Details</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function populatePendingReviews() {
+            const container = document.getElementById('pendingReviewsList');
+            container.innerHTML = '';
+
+            const pending = mockData.weeklyUpdates.filter(u =>
+                u.status === 'PENDING_REVIEW' && myStudents.some(s => s.id === u.studentId)
+            );
+
+            document.getElementById('reviewCount').textContent = pending.length;
+            document.getElementById('pendingReviews').textContent = pending.length;
+
+            if (pending.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">No pending reviews</p>';
+                return;
+            }
+
+            pending.forEach(update => {
+                const student = getStudentById(update.studentId);
+                const criterion = mockData.criteria.find(c => c.id === update.criterionId);
+
+                const card = `
+                    <div class="content-card" style="margin-bottom: 1rem; border-left: 4px solid var(--warning-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <h3>${student.name} - ${student.rollNumber}</h3>
+                                <p><strong>Criterion:</strong> ${criterion.name}</p>
+                                <p><strong>Week:</strong> ${update.weekNumber}</p>
+                                <p><strong>Activity:</strong> ${update.activity}</p>
+                                <p><strong>Description:</strong> ${update.description}</p>
+                                <p><strong>Proof:</strong> <a href="${update.proofUrl}" target="_blank">${update.proofUrl}</a></p>
+                                <p style="color: var(--text-secondary);"><small>Submitted: ${formatDate(update.submittedDate)}</small></p>
+                            </div>
+                            <button class="btn btn-primary" onclick="openReviewModal(${update.id})">Review Now</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function populateAnalytics() {
+            // Student progress charts
+            const chartsContainer = document.getElementById('studentProgressCharts');
+            chartsContainer.innerHTML = '';
+
+            myStudents.forEach(student => {
+                const progress = getStudentProgress(student.id);
+                const totalMarks = getTotalMarks(student.id);
+                const percentage = getProgressPercentage(student.id);
+
+                const card = `
+                    <div class="content-card" style="margin-bottom: 1rem;">
+                        <h3>${student.name} (${student.rollNumber})</h3>
+                        <div class="progress">
+                            <div class="progress-bar ${getProgressColor(percentage)}" style="width: ${percentage}%"></div>
+                        </div>
+                        <p>${totalMarks} / ${getMaxPossibleMarks()} marks - ${percentage}% complete</p>
+                    </div>
+                `;
+                chartsContainer.innerHTML += card;
+            });
+
+            // Criteria-wise analytics
+            const criteriaContainer = document.getElementById('criteriaAnalytics');
+            criteriaContainer.innerHTML = '';
+
+            mockData.criteria.forEach(criterion => {
+                // Calculate average marks for this criterion across all students
+                let totalMarks = 0;
+                let studentCount = 0;
+
+                myStudents.forEach(student => {
+                    const progress = studentProgress.find(p =>
+                        p.studentId === student.id && p.criterionId === criterion.id
+                    );
+                    if (progress) {
+                        totalMarks += progress.currentMarks;
+                        studentCount++;
+                    }
+                });
+
+                const avgMarks = studentCount > 0 ? (totalMarks / studentCount).toFixed(1) : 0;
+                const avgPercentage = (avgMarks / criterion.maxMarks) * 100;
+
+                const card = `
+                    <div class="criteria-card">
+                        <h3>${criterion.name}</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">Average Performance</p>
+                        <div class="progress">
+                            <div class="progress-bar ${getProgressColor(avgPercentage)}" style="width: ${avgPercentage}%"></div>
+                        </div>
+                        <div class="marks">
+                            <span class="current-marks">${avgMarks}</span>
+                            <span class="max-marks">/ ${criterion.maxMarks} marks</span>
+                        </div>
+                    </div>
+                `;
+                criteriaContainer.innerHTML += card;
+            });
+        }
+
+        function openReviewModal(updateId) {
+            currentReviewUpdate = mockData.weeklyUpdates.find(u => u.id === updateId);
+            const student = getStudentById(currentReviewUpdate.studentId);
+            const criterion = mockData.criteria.find(c => c.id === currentReviewUpdate.criterionId);
+
+            const details = `
+                <div style="background: var(--light-color); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <p><strong>Student:</strong> ${student.name} (${student.rollNumber})</p>
+                    <p><strong>Criterion:</strong> ${criterion.name} (Max: ${criterion.maxMarks} marks)</p>
+                    <p><strong>Week:</strong> ${currentReviewUpdate.weekNumber}</p>
+                    <p><strong>Activity:</strong> ${currentReviewUpdate.activity}</p>
+                    <p><strong>Description:</strong> ${currentReviewUpdate.description}</p>
+                    <p><strong>Proof:</strong> <a href="${currentReviewUpdate.proofUrl}" target="_blank">${currentReviewUpdate.proofUrl}</a></p>
+                </div>
+            `;
+
+            document.getElementById('reviewDetails').innerHTML = details;
+            document.getElementById('reviewMarks').max = criterion.maxMarks;
+            showModal('reviewModal');
+        }
+
+        function approveSubmission() {
+            const marks = document.getElementById('reviewMarks').value;
+            const comment = document.getElementById('reviewComment').value;
+
+            if (!marks || !comment) {
+                alert('Please enter marks and comment');
+                return;
+            }
+
+            showAlert(`Submission approved! Marks: ${marks}`, 'success');
+            hideModal('reviewModal');
+            document.getElementById('reviewForm').reset();
+
+            // Refresh data (in real app, would update backend)
+            setTimeout(() => {
+                initPage();
+            }, 500);
+        }
+
+        function rejectSubmission() {
+            const comment = document.getElementById('reviewComment').value;
+
+            if (!comment) {
+                alert('Please provide a reason for rejection');
+                return;
+            }
+
+            showAlert('Submission rejected. Student notified.', 'warning');
+            hideModal('reviewModal');
+            document.getElementById('reviewForm').reset();
+
+            // Refresh data
+            setTimeout(() => {
+                initPage();
+            }, 500);
+        }
+
+        function viewStudentDetails(studentId) {
+            const student = getStudentById(studentId);
+            const progress = getStudentProgress(studentId);
+            const updates = getStudentUpdates(studentId);
+
+            let detailsHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <h3>${student.name}</h3>
+                    <p><strong>Roll:</strong> ${student.rollNumber} | <strong>Register:</strong> ${student.registerNumber}</p>
+                    <p><strong>Department:</strong> ${student.department} | <strong>Year:</strong> ${student.year} | <strong>Section:</strong> ${student.section}</p>
+                </div>
+
+                <h4>Progress by Criteria</h4>
+                <div class="criteria-grid" style="margin-bottom: 1.5rem;">
+            `;
+
+            mockData.criteria.forEach(criterion => {
+                const prog = progress.find(p => p.criterionId === criterion.id);
+                const marks = prog ? prog.currentMarks : 0;
+                const percentage = (marks / criterion.maxMarks) * 100;
+
+                detailsHTML += `
+                    <div class="criteria-card">
+                        <h4 style="font-size: 0.9rem;">${criterion.name}</h4>
+                        <div class="progress">
+                            <div class="progress-bar ${getProgressColor(percentage)}" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="marks">
+                            <span class="current-marks" style="font-size: 1.2rem;">${marks}</span>
+                            <span class="max-marks">/ ${criterion.maxMarks}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            detailsHTML += `
+                </div>
+                <h4>Recent Submissions</h4>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Week</th>
+                                <th>Criterion</th>
+                                <th>Activity</th>
+                                <th>Status</th>
+                                <th>Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            updates.forEach(update => {
+                const criterion = mockData.criteria.find(c => c.id === update.criterionId);
+                detailsHTML += `
+                    <tr>
+                        <td>${update.weekNumber}</td>
+                        <td>${criterion.name}</td>
+                        <td>${update.activity}</td>
+                        <td>${getStatusBadge(update.status)}</td>
+                        <td>${update.marks !== null ? update.marks : '-'}</td>
+                    </tr>
+                `;
+            });
+
+            detailsHTML += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            document.getElementById('studentDetailContent').innerHTML = detailsHTML;
+            showModal('studentDetailModal');
+        }
+
+        function viewDetails(updateId) {
+            const update = mockData.weeklyUpdates.find(u => u.id === updateId);
+            const student = getStudentById(update.studentId);
+            const criterion = mockData.criteria.find(c => c.id === update.criterionId);
+
+            alert(`Student: ${student.name}\nCriterion: ${criterion.name}\nActivity: ${update.activity}\nStatus: ${update.status}\nMarks: ${update.marks}\nComment: ${update.reviewerComment}`);
+        }
+
+        function exportData() {
+            showAlert('Exporting data to CSV...', 'success');
+            // In real app, would generate CSV
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('[id$="-section"]').forEach(sec => {
+                sec.style.display = 'none';
+            });
+            document.getElementById(section + '-section').style.display = 'block';
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Initialize on page load
+        initPage();
+    </script>
+</body>
+</html>

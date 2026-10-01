@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Student Growth Monitoring System - Login</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>🎓 Student Growth Monitoring</h1>
+                <p>Track & Monitor Student Development</p>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username / Email</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="role">Login As</label>
+                    <select id="role" required>
+                        <option value="">Select Role</option>
+                        <option value="student">Student</option>
+                        <option value="mentor">Mentor</option>
+                        <option value="hod">Head of Department</option>
+                        <option value="placement">Placement Head</option>
+                        <option value="principal">Principal</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+
+                <div class="demo-credentials">
+                    <p><strong>Demo Credentials:</strong></p>
+                    <p>Student: student@college.edu / student123</p>
+                    <p>Mentor: mentor@college.edu / mentor123</p>
+                    <p>HOD: hod@college.edu / hod123</p>
+                    <p>Placement: placement@college.edu / placement123</p>
+                    <p>Principal: principal@college.edu / principal123</p>
+                </div>
+            </form>
+        </div>
+
+        <div class="features-section">
+            <h2>System Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <h3>12 Growth Criteria</h3>
+                    <p>Comprehensive tracking across all development areas</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📝</span>
+                    <h3>Weekly Updates</h3>
+                    <p>Submit and track weekly activities with proof</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">✅</span>
+                    <h3>Review System</h3>
+                    <p>Mentor approval workflow with feedback</p>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📈</span>
+                    <h3>Analytics Dashboard</h3>
+                    <p>Real-time progress tracking and reports</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/mock-data.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const role = document.getElementById('role').value;
+
+            if (!role) {
+                alert('Please select a role');
+                return;
+            }
+
+            // Store role in sessionStorage
+            sessionStorage.setItem('userRole', role);
+            sessionStorage.setItem('userName', document.getElementById('username').value);
+
+            // Redirect based on role
+            const pages = {
+                'student': 'pages/student-dashboard.html',
+                'mentor': 'pages/mentor-dashboard.html',
+                'hod': 'pages/hod-dashboard.html',
+                'placement': 'pages/placement-dashboard.html',
+                'principal': 'pages/principal-dashboard.html'
+            };
+
+            window.location.href = pages[role];
+        });
+    </script>
+</body>
+</html>

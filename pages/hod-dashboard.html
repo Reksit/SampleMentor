@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOD Dashboard - Growth Monitoring</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🎯 HOD Portal</h2>
+                <p>Head of Department - CSE</p>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="#" class="active" onclick="showSection('overview')"><span>📊</span> Overview</a></li>
+                <li><a href="#" onclick="showSection('students')"><span>👥</span> Department Students</a></li>
+                <li><a href="#" onclick="showSection('mentors')"><span>👨‍🏫</span> Mentors</a></li>
+                <li><a href="#" onclick="showSection('analytics')"><span>📈</span> Analytics</a></li>
+                <li><a href="#" onclick="showSection('reports')"><span>📄</span> Reports</a></li>
+                <li><a href="#" onclick="logout()"><span>🚪</span> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <h1>HOD Dashboard - Computer Science</h1>
+                <div class="user-info">
+                    <div class="user-avatar">HD</div>
+                    <div>
+                        <strong>Dr. HOD Name</strong>
+                        <p style="margin:0; font-size: 0.875rem; color: var(--text-secondary);">Head of Department</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overview Section -->
+            <div id="overview-section">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Total Students</h3>
+                            <div class="stat-value">3</div>
+                        </div>
+                        <div class="stat-icon primary">👥</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Total Mentors</h3>
+                            <div class="stat-value">2</div>
+                        </div>
+                        <div class="stat-icon success">👨‍🏫</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Avg. Progress</h3>
+                            <div class="stat-value">65%</div>
+                        </div>
+                        <div class="stat-icon warning">📈</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Pending Reviews</h3>
+                            <div class="stat-value">1</div>
+                        </div>
+                        <div class="stat-icon info">⏳</div>
+                    </div>
+                </div>
+
+                <!-- Department Performance -->
+                <div class="content-card">
+                    <h2>Department Performance Overview</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div style="text-align: center; padding: 1rem; background: var(--light-color); border-radius: 8px;">
+                            <h4 style="margin: 0 0 0.5rem 0; color: var(--text-secondary);">Top Performer</h4>
+                            <p style="margin: 0; font-size: 1.2rem; font-weight: bold;">Priya Sharma</p>
+                            <small>51 / 62 marks (82%)</small>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: var(--light-color); border-radius: 8px;">
+                            <h4 style="margin: 0 0 0.5rem 0; color: var(--text-secondary);">Avg. Marks</h4>
+                            <p style="margin: 0; font-size: 1.2rem; font-weight: bold;">40.3 / 62</p>
+                            <small>65% completion</small>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: var(--light-color); border-radius: 8px;">
+                            <h4 style="margin: 0 0 0.5rem 0; color: var(--text-secondary);">Total Submissions</h4>
+                            <p style="margin: 0; font-size: 1.2rem; font-weight: bold;">4</p>
+                            <small>This week</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Performers -->
+                <div class="content-card">
+                    <h2>Top Performing Students</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Student</th>
+                                    <th>Roll No</th>
+                                    <th>Section</th>
+                                    <th>Marks</th>
+                                    <th>Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topPerformers">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Section -->
+            <div id="students-section" style="display: none;">
+                <div class="content-card">
+                    <h2>Department Students</h2>
+                    <div class="search-bar">
+                        <input type="text" id="searchName" placeholder="Search by name...">
+                        <input type="text" id="searchRoll" placeholder="Search by roll...">
+                        <select id="filterYear">
+                            <option value="">All Years</option>
+                            <option value="1">Year 1</option>
+                            <option value="2">Year 2</option>
+                            <option value="3">Year 3</option>
+                            <option value="4">Year 4</option>
+                        </select>
+                        <select id="filterSection">
+                            <option value="">All Sections</option>
+                            <option value="A">Section A</option>
+                            <option value="B">Section B</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="applyFilters()">Search</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Roll No</th>
+                                    <th>Name</th>
+                                    <th>Year</th>
+                                    <th>Section</th>
+                                    <th>Mentor</th>
+                                    <th>Total Marks</th>
+                                    <th>Progress</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTable">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mentors Section -->
+            <div id="mentors-section" style="display: none;">
+                <div class="content-card">
+                    <h2>Department Mentors</h2>
+                    <div id="mentorsList">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics-section" style="display: none;">
+                <div class="content-card">
+                    <h2>Department Analytics</h2>
+
+                    <h3>Section-wise Performance</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                        <div class="content-card" style="border-left: 4px solid var(--primary-color);">
+                            <h4>Section A</h4>
+                            <p><strong>Students:</strong> 2</p>
+                            <p><strong>Average Marks:</strong> 45 / 62</p>
+                            <div class="progress">
+                                <div class="progress-bar success" style="width: 73%"></div>
+                            </div>
+                            <p style="margin-top: 0.5rem;">73% completion</p>
+                        </div>
+                        <div class="content-card" style="border-left: 4px solid var(--secondary-color);">
+                            <h4>Section B</h4>
+                            <p><strong>Students:</strong> 1</p>
+                            <p><strong>Average Marks:</strong> 31 / 62</p>
+                            <div class="progress">
+                                <div class="progress-bar warning" style="width: 50%"></div>
+                            </div>
+                            <p style="margin-top: 0.5rem;">50% completion</p>
+                        </div>
+                    </div>
+
+                    <h3>Criteria-wise Performance</h3>
+                    <div class="criteria-grid" id="criteriaAnalytics">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div id="reports-section" style="display: none;">
+                <div class="content-card">
+                    <h2>Generate Reports</h2>
+                    <div style="max-width: 600px;">
+                        <div class="form-group">
+                            <label>Report Type</label>
+                            <select id="reportType" class="form-control">
+                                <option value="department">Department Summary</option>
+                                <option value="student">Individual Student</option>
+                                <option value="criteria">Criteria-wise Analysis</option>
+                                <option value="mentor">Mentor Performance</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Format</label>
+                            <select id="reportFormat" class="form-control">
+                                <option value="pdf">PDF</option>
+                                <option value="excel">Excel</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../assets/js/mock-data.js"></script>
+    <script src="../assets/js/app.js"></script>
+    <script>
+        if (!checkAuth()) window.location.href = '../index.html';
+
+        const deptStudents = getDepartmentStudents('Computer Science');
+
+        function initPage() {
+            populateTopPerformers();
+            populateStudentsTable();
+            populateMentorsList();
+            populateCriteriaAnalytics();
+        }
+
+        function populateTopPerformers() {
+            const tbody = document.getElementById('topPerformers');
+            tbody.innerHTML = '';
+
+            const studentsWithMarks = deptStudents.map(s => ({
+                ...s,
+                totalMarks: getTotalMarks(s.id),
+                progress: getProgressPercentage(s.id)
+            })).sort((a, b) => b.totalMarks - a.totalMarks);
+
+            studentsWithMarks.forEach((student, index) => {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${student.name}</td>
+                        <td>${student.rollNumber}</td>
+                        <td>${student.section}</td>
+                        <td>${student.totalMarks} / ${getMaxPossibleMarks()}</td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar ${getProgressColor(student.progress)}" style="width: ${student.progress}%"></div>
+                            </div>
+                            ${student.progress}%
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function populateStudentsTable() {
+            const tbody = document.getElementById('studentsTable');
+            tbody.innerHTML = '';
+
+            deptStudents.forEach(student => {
+                const mentor = mockData.mentors.find(m => m.id === student.mentorId);
+                const totalMarks = getTotalMarks(student.id);
+                const progress = getProgressPercentage(student.id);
+
+                const row = `
+                    <tr>
+                        <td>${student.rollNumber}</td>
+                        <td>${student.name}</td>
+                        <td>${student.year}</td>
+                        <td>${student.section}</td>
+                        <td>${mentor.name}</td>
+                        <td>${totalMarks} / ${getMaxPossibleMarks()}</td>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar ${getProgressColor(progress)}" style="width: ${progress}%"></div>
+                            </div>
+                            ${progress}%
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="viewStudent(${student.id})">View</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function populateMentorsList() {
+            const container = document.getElementById('mentorsList');
+            container.innerHTML = '';
+
+            const deptMentors = mockData.mentors.filter(m => m.department === 'Computer Science');
+
+            deptMentors.forEach(mentor => {
+                const students = getMentorStudents(mentor.id);
+                const avgProgress = students.reduce((sum, s) => sum + getProgressPercentage(s.id), 0) / students.length;
+
+                const card = `
+                    <div class="content-card" style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <h3>${mentor.name}</h3>
+                                <p><strong>Employee ID:</strong> ${mentor.employeeId}</p>
+                                <p><strong>Email:</strong> ${mentor.email}</p>
+                                <p><strong>Phone:</strong> ${mentor.phone}</p>
+                                <p><strong>Assigned Students:</strong> ${students.length}</p>
+                                <p><strong>Average Student Progress:</strong> ${avgProgress.toFixed(1)}%</p>
+                            </div>
+                            <div>
+                                <div class="progress" style="width: 150px;">
+                                    <div class="progress-bar ${getProgressColor(avgProgress)}" style="width: ${avgProgress}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function populateCriteriaAnalytics() {
+            const container = document.getElementById('criteriaAnalytics');
+            container.innerHTML = '';
+
+            mockData.criteria.forEach(criterion => {
+                let totalMarks = 0;
+                let count = 0;
+
+                deptStudents.forEach(student => {
+                    const progress = mockData.studentProgress.find(p =>
+                        p.studentId === student.id && p.criterionId === criterion.id
+                    );
+                    if (progress) {
+                        totalMarks += progress.currentMarks;
+                        count++;
+                    }
+                });
+
+                const avgMarks = count > 0 ? (totalMarks / count).toFixed(1) : 0;
+                const percentage = (avgMarks / criterion.maxMarks) * 100;
+
+                const card = `
+                    <div class="criteria-card">
+                        <h3 style="font-size: 0.95rem;">${criterion.name}</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.8rem;">${criterion.category}</p>
+                        <div class="progress">
+                            <div class="progress-bar ${getProgressColor(percentage)}" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="marks">
+                            <span class="current-marks">${avgMarks}</span>
+                            <span class="max-marks">/ ${criterion.maxMarks}</span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function applyFilters() {
+            const name = document.getElementById('searchName').value.toLowerCase();
+            const roll = document.getElementById('searchRoll').value.toLowerCase();
+            const year = document.getElementById('filterYear').value;
+            const section = document.getElementById('filterSection').value;
+
+            const rows = document.querySelectorAll('#studentsTable tr');
+            rows.forEach(row => {
+                const cells = row.cells;
+                const matchName = !name || cells[1].textContent.toLowerCase().includes(name);
+                const matchRoll = !roll || cells[0].textContent.toLowerCase().includes(roll);
+                const matchYear = !year || cells[2].textContent === year;
+                const matchSection = !section || cells[3].textContent === section;
+
+                row.style.display = matchName && matchRoll && matchYear && matchSection ? '' : 'none';
+            });
+        }
+
+        function viewStudent(studentId) {
+            alert('Viewing details for student ID: ' + studentId);
+        }
+
+        function generateReport() {
+            const type = document.getElementById('reportType').value;
+            const format = document.getElementById('reportFormat').value;
+            showAlert(`Generating ${type} report in ${format} format...`, 'success');
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('[id$="-section"]').forEach(sec => {
+                sec.style.display = 'none';
+            });
+            document.getElementById(section + '-section').style.display = 'block';
+
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        initPage();
+    </script>
+</body>
+</html>
